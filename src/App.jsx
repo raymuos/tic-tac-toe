@@ -38,7 +38,8 @@ function App() {
 
   return (
     <>
-    <p className="w-full text-center text-3xl md:text-5xl my-8 presspixel">Tic-Tac-Toe</p>
+    <p className="w-full text-center text-amber-500 text-3xl md:text-5xl mt-8 presspixel">Tic-Tac-Toe</p>
+    <p className="w-full text-center text-yellow-200 font-bold text-lg my-2 ">By raymuos ❤️</p>
     <Sheet squares={currentSquares} 
            onPlay={handlePlay} 
            isXNow={isXNow} 
