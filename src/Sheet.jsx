@@ -25,13 +25,15 @@ function Sheet({
 
     const moves = history.map((_, moveNum) => {
         return( (moveNum !== 0) ?
-                            <li key={moveNum}>
+                            <li key={moveNum} className="w-full">
                                 <button 
                                         onClick={() => jumpTo(moveNum)}
                                         className="
-                                 bg-purple-700 hover:bg-purple-500 px-8 py-2
+                                 bg-purple-700 hover:bg-purple-500 
+                                 px-2 md:px-6 py-1 md:py-2
                                  transition duration-100 ease-in-out cursor-pointer hover:scale-105  
-                                 rounded-lg text-xl font-semibold shadow
+                                 rounded-md md:rounded-lg w-full
+                                 text-lg md:text-xl font-semibold shadow
                                 "> 
                                     Go to Move #{moveNum} 
                                 </button>
@@ -60,11 +62,14 @@ function Sheet({
     
 
     return(
-        <div className="flex justify-center items-start  bg-gray-900 text-white p-4">
+        <div className="flex flex-col justify-start items-center gap-6
+                        min-[600px]:flex-row min-[600px]:justify-center 
+                        min-[600px]:items-start min-[600px]:gap-0
+                        bg-gray-900 text-white p-4">
         {/* Game Board */}
-        <div className="flex-[3] flex flex-col justify-center items-center">
+        <div className="min-[600px]:flex-[3] flex flex-col justify-center items-center">
             
-            <div className="flex flex-col border border-[#ddd] mt-20">
+            <div className="flex flex-col border border-[#ddd] mt-5 min-[600px]:mt-20">
             {/* Row 1 */}
             <div className="flex">
                 <Box value={squares[0]} onSquareClick={() => handleMove(0)} isGreen={winLine.includes(0)} />
@@ -87,8 +92,11 @@ function Sheet({
         </div>
 
         {/* Sidebar */}
-        <div className="flex-[2] flex flex-col justify-start items-center gap-8">
-            <p className="w-2/3 text-center text-4xl font-bold bg-cyan-700 px-6 py-4 rounded-xl shadow-md">
+        <div className="min-[600px]:flex-[2] flex flex-col justify-start items-center gap-4
+                        min-[600px]:gap-8 max-[600px]:w-7/8">
+            <p className="w-7/8 min-[925px]:w-2/3 
+                          text-center text-3xl md:text-4xl font-semibold md:font-bold
+                          bg-cyan-700 px-6 py-4 rounded-xl shadow-md">
             {status}
             </p>
 
@@ -97,7 +105,8 @@ function Sheet({
                 onClick={resetBoard} //Goes back to App
                 className="
                 bg-red-700 hover:bg-red-500 transition duration-300 ease-in-out cursor-pointer
-                hover:text-black hover:scale-105 px-6 py-2 rounded-full text-2xl font-bold shadow
+                hover:text-black hover:scale-105 px-4 py-1.5 md:px-6 md:py-2 
+                rounded-full text-xl md:text-2xl font-semibold md:font-bold shadow
                 ">
                 {calcWinner(squares) ? 'Play Again' : 'Reset'}
             </button>
@@ -106,18 +115,19 @@ function Sheet({
                 <button
                     onClick={continueGame} //Goes back to App
                     className="
-                    bg-green-700 hover:bg-green-500 transition duration-300 ease-in-out cursor-pointer
-                    hover:text-black hover:scale-105 px-6 py-2 rounded-full text-2xl font-bold shadow
-                    ">
+                bg-green-700 hover:bg-green-500 transition duration-300 ease-in-out cursor-pointer
+                hover:text-black hover:scale-105 px-4 py-1.5 md:px-6 md:py-2 
+                rounded-full text-xl md:text-2xl font-semibold md:font-bold shadow
+                ">
                     Continue
                 </button>
             )}
         </div>
             
 
-            <div className="overflow-auto w-2/3 h-85 scroll-thin bg-gray-800 
+            <div className="overflow-auto w-7/8 min-[925px]:w-2/3 h-60 min-[925px]:h-85 scroll-thin bg-gray-800 
                             border-2 border-gray-600 p-4">
-                <ol className="flex flex-col flex-wrap items-center gap-4">
+                <ol className="flex flex-col flex-wrap items-center gap-4 w-full">
                     {moves}
                 </ol>
             </div>
