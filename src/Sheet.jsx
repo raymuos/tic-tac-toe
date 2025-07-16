@@ -14,13 +14,35 @@ function Sheet({
             }){
 
     const [status, setStatus] = useState('');
-    function handleMove(i) {
+    const [isBotOn, setIsBotOn] = useState(true);
+
+    function handleClick(i) {
         if(squares[i] || calcWinner(squares)) return;
 
         const newSquares = squares.slice();
         newSquares[i] = (isXNow)? 'X' : 'O' ;
         onPlay(newSquares);
         //This goes back to the App component and executes handlePlay()
+    }
+
+    const toggleBot = () => {
+        resetBoard();
+        setIsBotOn(x => !x);
+    }
+          
+    const triggerBot = () => {
+        if( !isXNow && !calcWinner(squares) && isBotOn ){
+            const emptyIndices = squares.map((sq,i) => (sq === null ? i : null))
+                                        .filter((sq) => sq !== null);
+            if (emptyIndices.length === 0) return;
+
+            const randomIndex = emptyIndices[
+                Math.floor(Math.random() * emptyIndices.length)
+            ]
+            const timer = setTimeout(() => handleClick(randomIndex), 750);
+            return () => clearTimeout(timer);
+        }
+         
     }
 
     const moves = history.map((_, moveNum) => {
@@ -39,8 +61,6 @@ function Sheet({
                                 </button>
                             </li> : null)
     })
-                            
-
     
     //updates when squares or isXNow changes 
     useEffect( () => {
@@ -50,15 +70,15 @@ function Sheet({
             setWinLine(result.line);
 
         } else if(squares.includes(null) && squares){
-            setStatus(`${(isXNow)? 'X' : 'O'}'s turn`);
+            setStatus(`${(isXNow)? 'X' : (isBotOn? 'Bot' : 'O')}'s turn`);
 
         } else {
-            setStatus("It's a Draw!");
+            setStatus("Tie!");
         }
 
     } , [squares, isXNow]);
 
-
+    useEffect( triggerBot , [isXNow , squares]);
     
 
     return(
@@ -72,41 +92,41 @@ function Sheet({
             <div className="flex flex-col border border-[#ddd] mt-5 min-[600px]:mt-20">
             {/* Row 1 */}
             <div className="flex">
-                <Box value={squares[0]} onSquareClick={() => handleMove(0)} isGreen={winLine.includes(0)} />
-                <Box value={squares[1]} onSquareClick={() => handleMove(1)} isGreen={winLine.includes(1)} />
-                <Box value={squares[2]} onSquareClick={() => handleMove(2)} isGreen={winLine.includes(2)} />
+                <Box value={squares[0]} onSquareClick={() => handleClick(0)} isGreen={winLine.includes(0)} />
+                <Box value={squares[1]} onSquareClick={() => handleClick(1)} isGreen={winLine.includes(1)} />
+                <Box value={squares[2]} onSquareClick={() => handleClick(2)} isGreen={winLine.includes(2)} />
             </div>
             {/* Row 2 */}
             <div className="flex">
-                <Box value={squares[3]} onSquareClick={() => handleMove(3)} isGreen={winLine.includes(3)} />
-                <Box value={squares[4]} onSquareClick={() => handleMove(4)} isGreen={winLine.includes(4)} />
-                <Box value={squares[5]} onSquareClick={() => handleMove(5)} isGreen={winLine.includes(5)} />
+                <Box value={squares[3]} onSquareClick={() => handleClick(3)} isGreen={winLine.includes(3)} />
+                <Box value={squares[4]} onSquareClick={() => handleClick(4)} isGreen={winLine.includes(4)} />
+                <Box value={squares[5]} onSquareClick={() => handleClick(5)} isGreen={winLine.includes(5)} />
             </div>
             {/* Row 3 */}
             <div className="flex">
-                <Box value={squares[6]} onSquareClick={() => handleMove(6)} isGreen={winLine.includes(6)} />
-                <Box value={squares[7]} onSquareClick={() => handleMove(7)} isGreen={winLine.includes(7)} />
-                <Box value={squares[8]} onSquareClick={() => handleMove(8)} isGreen={winLine.includes(8)} />
+                <Box value={squares[6]} onSquareClick={() => handleClick(6)} isGreen={winLine.includes(6)} />
+                <Box value={squares[7]} onSquareClick={() => handleClick(7)} isGreen={winLine.includes(7)} />
+                <Box value={squares[8]} onSquareClick={() => handleClick(8)} isGreen={winLine.includes(8)} />
             </div>
             </div>
         </div>
 
         {/* Sidebar */}
         <div className="min-[600px]:flex-[2] flex flex-col justify-start items-center gap-4
-                        min-[600px]:gap-8 max-[600px]:w-7/8">
-            <p className="w-7/8 min-[925px]:w-2/3 
-                          text-center text-3xl md:text-4xl font-semibold md:font-bold
-                          bg-cyan-700 px-6 py-4 rounded-xl shadow-md">
+                        min-[600px]:gap-6 w-7/8 min-[600px]:w-auto">
+            <p className="w-full min-[925px]:w-2/3 
+                          text-center text-[#33ff33] text-2xl md:text-3xl font-semibold presspixel
+                          bg-gray-900 px-6 py-4 rounded-sm ">
             {status}
             </p>
 
-        <div className="flex items-center gap-4">
+        <div className="flex justify-center items-center gap-4 flex-wrap w-full">
             <button
                 onClick={resetBoard} //Goes back to App
                 className="
                 bg-red-700 hover:bg-red-500 transition duration-300 ease-in-out cursor-pointer
-                hover:text-black hover:scale-105 px-4 py-1.5 md:px-6 md:py-2 
-                rounded-full text-xl md:text-2xl font-semibold md:font-bold shadow
+                hover:text-black hover:scale-105 px-8 py-2 
+                rounded-full text-2xl font-extrabold md:font-bold shadow
                 ">
                 {calcWinner(squares) ? 'Play Again' : 'Reset'}
             </button>
@@ -116,14 +136,30 @@ function Sheet({
                     onClick={continueGame} //Goes back to App
                     className="
                 bg-green-700 hover:bg-green-500 transition duration-300 ease-in-out cursor-pointer
-                hover:text-black hover:scale-105 px-4 py-1.5 md:px-6 md:py-2 
-                rounded-full text-xl md:text-2xl font-semibold md:font-bold shadow
+                hover:text-black hover:scale-105 px-6 py-2 
+                rounded-full text-2xl font-extrabold md:font-bold shadow
                 ">
                     Continue
                 </button>
             )}
+
+            <button
+                onClick={toggleBot} //Goes back to App
+                className={`
+                ${ isBotOn ? 
+                    'bg-orange-600 hover:bg-orange-400' :
+                    'bg-yellow-600 hover:bg-yellow-400'}
+                
+                transition duration-300 ease-in-out cursor-pointer
+                hover:text-black hover:scale-105 px-8 py-2 
+                rounded-lg text-2xl font-extrabold md:font-bold shadow
+                `}>
+                {isBotOn ? '🤖 DumBot Mode' : '👥 2Player Mode'}
+            </button>
+
         </div>
             
+            (Scroll below for Moves check)
 
             <div className="overflow-auto w-7/8 min-[925px]:w-2/3 h-60 min-[925px]:h-85 scroll-thin bg-gray-800 
                             border-2 border-gray-600 p-4">
