@@ -114,9 +114,10 @@ function Sheet({
         {/* Sidebar */}
         <div className="min-[600px]:flex-[2] flex flex-col justify-start items-center gap-4
                         min-[600px]:gap-6 w-7/8 min-[600px]:w-auto">
-            <p className="w-full min-[925px]:w-2/3 
-                          text-center text-[#33ff33] text-2xl md:text-3xl font-semibold presspixel
-                          bg-gray-900 px-6 py-4 rounded-sm ">
+            <p className={`text-2xl lg:text-3xl
+                          w-full min-[925px]:w-2/3 
+                          text-center text-[#33ff33] font-semibold presspixel
+                          bg-gray-900 px-6 py-4 rounded-sm`}>
             {status}
             </p>
 
@@ -161,7 +162,7 @@ function Sheet({
             
             (Scroll below for Moves check)
 
-            <div className="overflow-auto w-7/8 min-[925px]:w-2/3 h-60 min-[925px]:h-85 scroll-thin bg-gray-800 
+            <div className="overflow-auto w-7/8 min-[925px]:w-2/3 h-75 scroll-thin bg-gray-800 
                             border-2 border-gray-600 p-4">
                 <ol className="flex flex-col flex-wrap items-center gap-4 w-full">
                     {moves}

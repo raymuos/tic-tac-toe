@@ -40,6 +40,7 @@ function App() {
     <>
     <p className="w-full text-center text-amber-500 text-3xl md:text-5xl mt-8 presspixel">Tic-Tac-Toe</p>
     <p className="w-full text-center text-yellow-200 font-bold text-lg my-2 ">By raymuos ❤️</p>
+    <p className="w-full text-center text-lg my-2 "> (Bot is stupid, proceed with caution)</p>
     <Sheet squares={currentSquares} 
            onPlay={handlePlay} 
            isXNow={isXNow} 
