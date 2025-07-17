@@ -20,7 +20,7 @@ function Sheet({
         if(squares[i] || calcWinner(squares)) return;
 
         const newSquares = squares.slice();
-        newSquares[i] = (isXNow)? 'X' : 'O' ;
+        newSquares[i] = (isXNow)? 'X' : 'O';
         onPlay(newSquares);
         //This goes back to the App component and executes handlePlay()
     }
@@ -32,14 +32,28 @@ function Sheet({
           
     const triggerBot = () => {
         if( !isXNow && !calcWinner(squares) && isBotOn ){
-            const emptyIndices = squares.map((sq,i) => (sq === null ? i : null))
-                                        .filter((sq) => sq !== null);
-            if (emptyIndices.length === 0) return;
-
-            const randomIndex = emptyIndices[
-                Math.floor(Math.random() * emptyIndices.length)
-            ]
-            const timer = setTimeout(() => handleClick(randomIndex), 750);
+            // const emptyIndices = squares.map((sq,i) => (sq === null ? i : null))
+            //                             .filter((sq) => sq !== null);
+            // if (emptyIndices.length === 0) return;
+            // const randomIndex = emptyIndices[
+            //     Math.floor(Math.random() * emptyIndices.length)
+            // ]
+            let moveIndex;
+            let bestScore = -Infinity;
+            const newSquares = squares.slice();
+            for ( let i = 0; i < newSquares.length; i++){
+                if(newSquares[i] === null){
+                    newSquares[i] = 'O';
+                    let score = minimax(newSquares, 0, false);
+                    newSquares[i] = null;
+                    if (score > bestScore){
+                        bestScore = score;
+                        moveIndex = i;
+                    }
+                }
+            }
+            
+            const timer = setTimeout(() => handleClick(moveIndex), 500);
             return () => clearTimeout(timer);
         }
          
@@ -62,11 +76,11 @@ function Sheet({
                             </li> : null)
     })
     
-    //updates when squares or isXNow changes 
+    //---------------------------STATUS DISPLAY --------------------
     useEffect( () => {
         const result = calcWinner(squares);
         if (result){
-            setStatus('Winner: ' + result.winner);
+            setStatus(result.winner === 'tie' ?  'Tie!' : 'Winner: ' + result.winner);
             setWinLine(result.line);
 
         } else if(squares.includes(null) && squares){
@@ -85,7 +99,7 @@ function Sheet({
         <div className="flex flex-col justify-start items-center gap-6
                         min-[600px]:flex-row min-[600px]:justify-center 
                         min-[600px]:items-start min-[600px]:gap-0
-                        bg-gray-900 text-white p-4">
+                        bg-gray-900 text-white">
         {/* Game Board */}
         <div className="min-[600px]:flex-[3] flex flex-col justify-center items-center">
             
@@ -132,18 +146,6 @@ function Sheet({
                 {calcWinner(squares) ? 'Play Again' : 'Reset'}
             </button>
 
-            {!(squares.includes(null)) && !calcWinner(squares) && (
-                <button
-                    onClick={continueGame} //Goes back to App
-                    className="
-                bg-green-700 hover:bg-green-500 transition duration-300 ease-in-out cursor-pointer
-                hover:text-black hover:scale-105 px-6 py-2 
-                rounded-full text-2xl font-extrabold md:font-bold shadow
-                ">
-                    Continue
-                </button>
-            )}
-
             <button
                 onClick={toggleBot} //Goes back to App
                 className={`
@@ -153,7 +155,7 @@ function Sheet({
                 
                 transition duration-300 ease-in-out cursor-pointer
                 hover:text-black hover:scale-105 px-8 py-2 
-                rounded-lg text-2xl font-extrabold md:font-bold shadow
+                rounded-full text-2xl font-extrabold md:font-bold shadow
                 `}>
                 {isBotOn ? '🤖 DumBot Mode' : '👥 2Player Mode'}
             </button>
@@ -194,7 +196,46 @@ function calcWinner(sqs){
         }
     }
 
+    if( !sqs.includes(null) ) return {winner: 'tie', line: []};
+
     return null;
+}
+
+function minimax( sqs, depth, isMaximizing ) {
+    const legend = {
+        'X' : -1,
+        'O' : +1,
+        'tie' : 0,
+    }
+    const result = calcWinner(sqs);
+    if ( result !== null ) return legend[result.winner];
+    
+
+    if(isMaximizing){
+        let bestScore = -Infinity;
+        for ( let i = 0; i < sqs.length; i++){
+            if(sqs[i] === null){
+                sqs[i] = 'O';
+                let score = minimax(sqs, depth + 1, false);
+                sqs[i] = null;
+                bestScore = Math.max(score / Math.pow(10, depth), bestScore);
+            }
+        }
+        return bestScore;
+    }
+
+    else{
+        let bestScore = Infinity;
+        for ( let i = 0; i < sqs.length; i++){
+            if(sqs[i] === null){
+                sqs[i] = 'X';
+                let score = minimax(sqs, depth + 1, true);
+                sqs[i] = null;
+                bestScore = Math.min(score / Math.pow(10, depth), bestScore);
+            }
+        }
+        return bestScore;
+    }
 }
 
 export default Sheet;
