@@ -6,7 +6,6 @@ function Sheet({
                 isXNow, 
                 onPlay, 
                 resetBoard, 
-                continueGame, 
                 winLine, 
                 setWinLine, 
                 history, 
@@ -50,6 +49,7 @@ function Sheet({
                         bestScore = score;
                         moveIndex = i;
                     }
+                    console.log(bestScore);
                 }
             }
             
@@ -65,9 +65,9 @@ function Sheet({
                                 <button 
                                         onClick={() => jumpTo(moveNum)}
                                         className="
-                                 bg-purple-700 hover:bg-purple-500 
+                                 bg-cyan-700 hover:bg-cyan-600 
                                  px-2 md:px-6 py-1 md:py-2
-                                 transition duration-100 ease-in-out cursor-pointer hover:scale-105  
+                                 transition duration-100 ease-in-out cursor-pointer hover:scale-102  
                                  rounded-md md:rounded-lg w-full
                                  text-lg md:text-xl font-semibold shadow
                                 "> 
@@ -166,7 +166,7 @@ function Sheet({
 
             <div className="overflow-auto w-7/8 min-[925px]:w-2/3 h-75 scroll-thin bg-gray-800 
                             border-2 border-gray-600 p-4">
-                <ol className="flex flex-col flex-wrap items-center gap-4 w-full">
+                <ol className="flex flex-col flex-wrap items-center gap-3 w-full">
                     {moves}
                 </ol>
             </div>

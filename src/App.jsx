@@ -24,12 +24,6 @@ function App() {
     setWinLine([]);
   }
 
-  function continueGame(){
-    const nextHistory =  [...history , Array(9).fill(null)];
-    setHistory(nextHistory);
-    setCurrentMove(nextHistory.length - 1);
-  }
-
   function jumpTo( index ){
     setCurrentMove(index);
     setIsXNow(index % 2 === 0);
@@ -40,12 +34,10 @@ function App() {
     <>
     <p className="w-full text-center text-amber-500 text-3xl md:text-5xl mt-8 presspixel">Tic-Tac-Toe</p>
     <p className="w-full text-center text-yellow-200 font-bold text-lg mt-2 ">By raymuos ❤️</p>
-    <p className="w-full text-center text-lg mb-2 "> (Bot is stupid, proceed with caution)</p>
     <Sheet squares={currentSquares} 
            onPlay={handlePlay} 
            isXNow={isXNow} 
            resetBoard={resetBoard} 
-           continueGame={continueGame}
            history={history} 
            jumpTo={jumpTo} 
            winLine={winLine} 
